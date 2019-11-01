@@ -60,7 +60,7 @@ type RoutesMap = {
 }
 
 type RouteObject = {
-  path: string,
+  path?: string,
   capitalizedWords?: boolean,
   toPath?: (value: string, key?: string) => string,
   fromPath?: (pathSegment: string, key?: string) => string,
@@ -128,7 +128,7 @@ type Options = {
 
 * **restoreScroll** - a function to update window/elements scroll position. See the [scroll restoration doc](./scroll-restoration.md) for more info.
 
-* **onBeforeChange** - a simple function that will be called before the routes change. It's passed your standard `dispatch` and `getState` arguments like a thunk, as well as the `bag` object as a third parameter, which contains the dispatched `action` and the configured `extra` value. Keep in mind unlike `onAfterChange`, the action has not been dispatched yet. Therefore, the state won't reflect it. So you need to use the action to extract URL params from the `payload`. You can use this function to efficiently short-circuit the middleware by calling `dispatch(redirect(newAction))`, where `newAction` has the matching `type` and `payload` of the route you would like to redirect to. Using `onBeforeChange` and `location.kind === 'redirect'` + `res.redirect(301, pathname)` in your `serverRender` function is the idiom here for handling redirects server-side. See [server-rendering docs](.server-rendering.md) for more info.
+* **onBeforeChange** - a simple function that will be called before the routes change. It's passed your standard `dispatch` and `getState` arguments like a thunk, as well as the `bag` object as a third parameter, which contains the dispatched `action` and the configured `extra` value. Keep in mind unlike `onAfterChange`, the action has not been dispatched yet. Therefore, the state won't reflect it. So you need to use the action to extract URL params from the `payload`. You can use this function to efficiently short-circuit the middleware by calling `dispatch(redirect(newAction))`, where `newAction` has the matching `type` and `payload` of the route you would like to redirect to. Using `onBeforeChange` and `location.kind === 'redirect'` + `res.redirect(301, pathname)` in your `serverRender` function is the idiom here for handling redirects server-side. See [server-rendering docs](./server-rendering.md) for more info.
 
 * **onAfterChange** - a simple function that will be called after the routes change. It's passed your standard `dispatch` and `getState` arguments, as well as the `bag` object as a third parameter, which contains the dispatched `action` and the configured `extra` value.
 like a thunk.
@@ -182,7 +182,8 @@ const store = createStore(rootReducer, compose(enhancer, middlewares))
 The `history` object is the return of the *history* package's `createBrowserHistory` or `createMemoryHistory` function:
 
 ```js
-import createHistory from 'history/createBrowserHistory'
+import createHistory from "rudy-history/createBrowserHistory";
+
 const { middleware, enhancer, reducer } = connectRoutes(routesMap, {
   createHistory,
 })
@@ -192,7 +193,7 @@ const { middleware, enhancer, reducer } = connectRoutes(routesMap, {
 *or:*
 
 ```js
-import createHistory from 'history/createMemoryHistory'
+import createHistory from "rudy-history/createMemoryHistory";
 const { middleware, enhancer, reducer } = connectRoutes(routesMap, {
   createHistory,
   initialEntries: [request.path],
